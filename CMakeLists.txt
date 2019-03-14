@@ -7,7 +7,7 @@ include_directories(${PROJECT_SOURCE_DIR}/..)
 project (rover_control)
 SET(GCC_FLAGS "-g")
 add_definitions(${GCC_FLAGS})
-find_package(Eigen3 REQUIRED)
+
 
 include_directories(${Eigen_INCLUDE_DIRS})
 find_package(catkin REQUIRED COMPONENTS
@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   kinova_driver
-  vicon
+  
 )
 catkin_package()
 include_directories(

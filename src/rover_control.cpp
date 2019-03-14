@@ -49,6 +49,7 @@ void viconCallback(nav_msgs::Odometry roverspeed)
 	real_vel[0] = roverspeed.twist.twist.linear.x;
 	real_vel[1] = roverspeed.twist.twist.linear.y;
 	real_vel[2] = roverspeed.twist.twist.angular.z;
+
 }
 
 void velocityCallback(geometry_msgs::Twist twist)
@@ -58,9 +59,20 @@ void velocityCallback(geometry_msgs::Twist twist)
 	goal_vel[1] = twist.linear.y;
 	goal_vel[2] = twist.angular.z;
 	getRotationRates(rates,goal_vel,real_vel);
+	for(int i=0;i<4;i++){
+	rates[i]=rates[i]/pi/2*60;
+		if(rates[i]>120)
+			rates[i]=120;
+		if(rates[i]<-120)
+			rates[i]=-120;
+		rates[i]=round(rates[i]/122*1000);
+		if(rates[i]<300 && rates[i]>-300)
+			rates[i] = 0;
+	}
+
 	prevGoal = ros::Time::now();
 	GoalTimeout = false;
-	std::cout<<twist.linear.x<<" "<<twist.linear.y<<" "<<twist.angular.z<<std::endl;
+	std::cout<<twist.linear.x-real_vel[0]<<" "<<twist.linear.y-real_vel[1]<<" "<<twist.angular.z-real_vel[2]<<std::endl;
 
 }
 
@@ -141,7 +153,7 @@ int main(int argc, char** argv){
 	while(ros::ok()){
 		
 		bool write=false;
-		
+		//std::cout<<"Still Running\n";
 		if(ros::Time::now()-prevGoal>goalDelay)
 			GoalTimeout = true;
 
@@ -150,6 +162,7 @@ int main(int argc, char** argv){
 			write=false;
 			writeDeltas(&ser1,&ser2,rates); //Rover Uncomment
 			prevWrite=ros::Time::now();
+			//std::cout<<"Wrote speeds\n";
 		}
 		
 //		loop_rate.sleep();
@@ -179,7 +192,7 @@ void getRotationRates(float* rates, float* goal_vel,float* real_vel, float x_cm,
 		float l=sqrt(wheel_locs[0][i]*wheel_locs[0][i]+wheel_locs[1][i]*wheel_locs[1][i]);
 		rates[i]=(goal_vel[0] + 0.1*(goal_vel[0] - real_vel[0]))/radius*cos(b-c)/sin(c);
 		rates[i]-=(goal_vel[1] + 0.1*(goal_vel[1] - real_vel[1]))/radius*sin(b-c)/sin(c);
-		rates[i]-=(goal_vel[2] + 0.1*(goal_vel[2] - real_vel[2]))/radius*l*sin(b-c+a)/sin(c);
+		rates[i]-=(goal_vel[2] + 0.5*(goal_vel[2] - real_vel[2]))/radius*l*sin(b-c+a)/sin(c);
 	}
 
 }
