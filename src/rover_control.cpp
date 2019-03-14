@@ -55,7 +55,7 @@ void velocityCallback(geometry_msgs::Twist twist)
 {
 	float goal_vel[3];
 	goal_vel[0] = twist.linear.x;
-	goal_vel[1] = twist.linear.x;
+	goal_vel[1] = twist.linear.y;
 	goal_vel[2] = twist.angular.z;
 	getRotationRates(rates,goal_vel,real_vel);
 	prevGoal = ros::Time::now();
@@ -154,7 +154,7 @@ int main(int argc, char** argv){
 		
 //		loop_rate.sleep();
 		ros::spinOnce();
-		loop_rate.sleep();		
+		loop_rate.sleep();
 	}
 	ser1.Close();// Rover Uncomment
 	ser2.Close();// Rover Uncomment
