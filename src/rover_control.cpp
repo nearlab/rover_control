@@ -136,7 +136,7 @@ int main(int argc, char** argv){
 	ros::Time prevWrite=ros::Time::now();
 	ros::Time start_time=ros::Time::now();
 	ros::Duration writeDelay(.01);
-	ros::Duration goalDelay(2);
+	ros::Duration goalDelay(0.5);
 	ros::Duration d;
 	
 	double t;
@@ -184,15 +184,15 @@ void getRotationRates(float* rates, float* goal_vel,float* real_vel, float x_cm,
 		wheel_locs[0][i]=((i&2)>0?-length/2:length/2)-x_cm;//hardcoding is for dummies
 		wheel_locs[1][i]=(((i&2)>>1)^(i&1)>0?-width/2:width/2)-y_cm;
 	}
-
+	float b[] = {0,0,pi,pi};
 	for(uint8_t i=0;i<4;i++){
 		float a=atan2(wheel_locs[1][i],wheel_locs[0][i]);//about pi/4 or -pi/4
-		float b=(((i&2)>>1)^(i&1))>0?-pi/2:pi/2;
+		//float b=(((i&2)>>1)^(i&1))>0?-pi/2:pi/2;
 		float c=i&1>0?-pi/4:pi/4;
 		float l=sqrt(wheel_locs[0][i]*wheel_locs[0][i]+wheel_locs[1][i]*wheel_locs[1][i]);
-		rates[i]=(goal_vel[0] + 0.1*(goal_vel[0] - real_vel[0]))/radius*cos(b-c)/sin(c);
-		rates[i]-=(goal_vel[1] + 0.1*(goal_vel[1] - real_vel[1]))/radius*sin(b-c)/sin(c);
-		rates[i]-=(goal_vel[2] + 0.5*(goal_vel[2] - real_vel[2]))/radius*l*sin(b-c+a)/sin(c);
+		rates[i]=(goal_vel[0] + 0*(goal_vel[0] - real_vel[0]))/radius*cos(b[i]-c)/sin(c);
+		rates[i]-=(goal_vel[1] + 0*(goal_vel[1] - real_vel[1]))/radius*sin(b[i]-c)/sin(c);
+		rates[i]-=(goal_vel[2] + 0*(goal_vel[2] - real_vel[2]))/radius*l*sin(b[i]-c+a)/sin(c);
 	}
 
 }
