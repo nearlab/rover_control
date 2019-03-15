@@ -66,13 +66,13 @@ void velocityCallback(geometry_msgs::Twist twist)
 		if(rates[i]<-120)
 			rates[i]=-120;
 		rates[i]=round(rates[i]/122*1000);
-		if(rates[i]<300 && rates[i]>-300)
+		if(rates[i]<100 && rates[i]>-100)
 			rates[i] = 0;
 	}
 
 	prevGoal = ros::Time::now();
 	GoalTimeout = false;
-	std::cout<<twist.linear.x-real_vel[0]<<" "<<twist.linear.y-real_vel[1]<<" "<<twist.angular.z-real_vel[2]<<std::endl;
+	//std::cout<<twist.linear.x-real_vel[0]<<" "<<twist.linear.y-real_vel[1]<<" "<<twist.angular.z-real_vel[2]<<std::endl;
 
 }
 
@@ -162,7 +162,7 @@ int main(int argc, char** argv){
 			write=false;
 			writeDeltas(&ser1,&ser2,rates); //Rover Uncomment
 			prevWrite=ros::Time::now();
-			//std::cout<<"Wrote speeds\n";
+			std::cout<<"Wrote speeds: "<<rates[0]<<" "<<rates[1]<<" "<<rates[2]<<" "<<rates[3]<<"\n";
 		}
 		
 //		loop_rate.sleep();
