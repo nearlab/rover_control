@@ -15,9 +15,12 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   kinova_driver
-  
+  actionlib
+  message_generation
+  kinova_msgs
+  serial
 )
-catkin_package()
+catkin_package(CATKIN_DEPENDS roscpp actionlib)
 include_directories(
 ${catkin_INCLUDE_DIRS}
 )
